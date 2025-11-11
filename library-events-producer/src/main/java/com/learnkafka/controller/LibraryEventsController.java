@@ -33,8 +33,8 @@ public class LibraryEventsController {
         log.info("libraryEvent: {}", event);
 
 //        libraryEventsProducer.sendLibraryEvent(event);
-        libraryEventsProducer.sendLibraryEventSynchronously(event);
-
+//        libraryEventsProducer.sendLibraryEventSynchronously(event);
+        libraryEventsProducer.sendLibraryEvent_approach3(event);
 
         log.info("After sending library event");
         return ResponseEntity.status(HttpStatus.CREATED).body(event);
