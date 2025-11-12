@@ -1,4 +1,4 @@
-package com.learnkafka.util;
+package com.learnkafka.intg.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

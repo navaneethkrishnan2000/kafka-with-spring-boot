@@ -1,8 +1,8 @@
-package com.learnkafka;
+package com.learnkafka.intg.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learnkafka.domain.LibraryEvent;
-import com.learnkafka.util.TestUtil;
+import com.learnkafka.intg.util.TestUtil;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
