@@ -1,13 +1,13 @@
-package com.example.library_events_consumer;
+package com.learnkafka;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LibraryEventsConsumerApplication {
+public class LibraryEventConsumerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(LibraryEventsConsumerApplication.class, args);
+		SpringApplication.run(LibraryEventConsumerApplication.class, args);
 	}
 
 }

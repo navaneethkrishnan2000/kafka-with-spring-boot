@@ -1,10 +1,10 @@
-package com.example.library_events_consumer;
+package com.learnkafka;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LibraryEventsConsumerApplicationTests {
+class LibraryEventConsumerApplicationTests {
 
 	@Test
 	void contextLoads() {
