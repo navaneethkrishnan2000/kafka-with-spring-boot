@@ -20,7 +20,7 @@ public class LibraryEventsConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<Object, Object> factory
             = new ConcurrentKafkaListenerContainerFactory<>();
         configurer.configure(factory, kafkaConsumerFactory);
-        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL); // This configuration explicitly overrides the default AckMode.BATCH (or AckMode.RECORD in some defaults) and instructs the Spring Kafka container not to commit offsets automatically. Instead, it delegates the responsibility to the application code via the Acknowledgment object.
+//        factory.getContainerProperties().setAckMode(ContainerProperties.AckMode.MANUAL); // This configuration explicitly overrides the default AckMode.BATCH (or AckMode.RECORD in some defaults) and instructs the Spring Kafka container not to commit offsets automatically. Instead, it delegates the responsibility to the application code via the Acknowledgment object.
         return factory;
     }
 }
