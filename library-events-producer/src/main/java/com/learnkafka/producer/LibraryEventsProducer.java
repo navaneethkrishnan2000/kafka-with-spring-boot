@@ -22,7 +22,7 @@ import java.util.concurrent.TimeoutException;
 @Component
 public class LibraryEventsProducer {
 
-    @Value("${spring.kafka.topic}")
+    @Value("${spring.kafka.template.default-topic}")
     private String topic;
 
     private final KafkaTemplate<Integer, String> kafkaTemplate;
