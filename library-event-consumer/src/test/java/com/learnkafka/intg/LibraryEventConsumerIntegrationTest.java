@@ -68,6 +68,9 @@ public class LibraryEventConsumerIntegrationTest {
     @Autowired
     LibraryEventRepository libraryEventRepository;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @BeforeEach
     void setUp() {
         for (MessageListenerContainer messageListenerContainer : endpointRegistry.getListenerContainers()) {
@@ -103,5 +106,48 @@ public class LibraryEventConsumerIntegrationTest {
             assert libraryEvent.getLibraryEventId() != null;
             assertEquals(1, libraryEvent.getBook().getBookId());
         });
+    }
+
+    @Test
+    void publishUpdateLibraryEvent() throws JsonProcessingException, ExecutionException, InterruptedException {
+        //given
+        String json = "{\"libraryEventId\":null,\"libraryEventType\":\"NEW\",\"book\":{\"bookName\":\"Kafka Using Spring Boot\",\"bookAuthor\":\"Dilip\"}}";
+        LibraryEvent libraryEvent = objectMapper.readValue(json, LibraryEvent.class);
+        libraryEvent.getBook().setLibraryEvent(libraryEvent);
+        libraryEventRepository.save(libraryEvent);
+
+        //publish the update LibraryEvent
+        libraryEvent.getBook().setBookName("kafka Using Spring Boot 2.x");
+        libraryEvent.getBook().setBookAuthor("Navaneeth");
+        libraryEvent.setLibraryEventType(LibraryEventType.UPDATE);
+
+        String updatedJson = objectMapper.writeValueAsString(libraryEvent);
+        kafkaTemplate.sendDefault(libraryEvent.getLibraryEventId(), updatedJson).get();
+
+        // when
+        CountDownLatch latch = new CountDownLatch(1);
+        latch.await(3, TimeUnit.SECONDS);
+
+        // then
+        verify(libraryEventsConsumerSpy, times(1)).onMessage(isA(ConsumerRecord.class));
+        verify(libraryEventsServiceSpy, times(1)).processLibraryEvent(isA(ConsumerRecord.class));
+        LibraryEvent persistedLibraryEvent = libraryEventRepository.findById(libraryEvent.getLibraryEventId()).get();
+
+        assertEquals("kafka Using Spring Boot 2.x", persistedLibraryEvent.getBook().getBookName());
+    }
+
+    @Test
+    void publishUpdateLibraryEvent_null_LibraryEvent() throws InterruptedException, JsonProcessingException, ExecutionException {
+        // given
+        String json = "{\"libraryEventId\":null,\"libraryEventType\":\"UPDATE\",\"book\":{\"bookName\":\"Kafka Using Spring Boot\",\"bookAuthor\":\"Dilip\"}}";
+        kafkaTemplate.sendDefault(json).get();
+
+        // when
+        CountDownLatch latch = new CountDownLatch(1);
+        latch.await(5, TimeUnit.SECONDS);
+
+        // then
+        verify(libraryEventsConsumerSpy, times(10)).onMessage(isA(ConsumerRecord.class));
+        verify(libraryEventsServiceSpy, times(10)).processLibraryEvent(isA(ConsumerRecord.class));
     }
 }

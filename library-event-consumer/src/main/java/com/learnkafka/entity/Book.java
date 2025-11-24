@@ -1,5 +1,6 @@
 package com.learnkafka.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,6 +18,7 @@ public class Book {
     private String bookName;
     private String bookAuthor;
 
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "libraryEventId")
     private LibraryEvent libraryEvent;
