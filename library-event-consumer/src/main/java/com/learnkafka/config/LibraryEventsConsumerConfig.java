@@ -7,10 +7,20 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.listener.ContainerProperties;
+import org.springframework.kafka.listener.DefaultErrorHandler;
+import org.springframework.util.backoff.FixedBackOff;
 
 @EnableKafka
 @Configuration
 public class LibraryEventsConsumerConfig {
+
+    public DefaultErrorHandler defaultErrorHandler() {
+
+        // Retry 2 times with 1-second interval
+        FixedBackOff fixedBackOff = new FixedBackOff(1000L, 2);
+
+        return new DefaultErrorHandler(fixedBackOff);
+    }
 
     @Bean
     ConcurrentKafkaListenerContainerFactory<?, ?> kafkaListenerContainerFactory(
@@ -32,6 +42,8 @@ public class LibraryEventsConsumerConfig {
                                     Kafka's group management automatically distributes the topic's partitioning among these consumers.
          Parallel Processing: - Since each consumer instance operates on its assigned partitions in parallel using separate threads, the application's overall message throughput can increase significantly.
          */
+
+        factory.setCommonErrorHandler(defaultErrorHandler()); // Whenever a record processing fails, use THIS error handler to decide what to do.
 
         return factory;
     }
